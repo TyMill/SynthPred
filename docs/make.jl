@@ -1,3 +1,6 @@
+using Pkg
+Pkg.develop(path = joinpath(@__DIR__, ".."))
+
 using Documenter
 using SynthPred
 
