@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use SynthPred.jl, please cite it using the following metadata."
+title: SynthPred.jl
+version: 0.1.0.1
+doi: 10.5281/zenodo.15090893
+date-released: 2025-03-26
+authors:
+  - family-names: Miller
+    given-names: Tymoteusz
+    orcid: https://orcid.org/0000-0002-5962-5334
