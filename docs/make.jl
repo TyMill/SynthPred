@@ -1,9 +1,11 @@
 using Pkg
+
+# Aktywuj środowisko dokumentacji, które ma tylko Documenter.jl
 Pkg.activate("docs")
 Pkg.instantiate()
 
 using Documenter
-using SynthPred
+using SynthPred  # Pakiet główny jest aktywny, bo CI startuje z głównego katalogu
 
 makedocs(
     sitename = "SynthPred.jl",
