@@ -19,11 +19,12 @@ jobs:
           version: '1.9'
 
       - name: Install documentation dependencies
-        run: julia --project=docs -e '
-          using Pkg;
-          Pkg.activate("docs");
-          Pkg.instantiate()
-        '
+        run: |
+          julia --project=docs -e '
+            using Pkg;
+            Pkg.activate("docs");
+            Pkg.instantiate()
+          '
 
       - name: Build documentation
         run: julia --project=docs docs/make.jl
