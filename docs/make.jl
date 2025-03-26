@@ -1,8 +1,12 @@
 using Pkg
-Pkg.develop(path = joinpath(@__DIR__, ".."))
+
+# Przeciwdziała konfliktom wersji pakietów lokalnych w GitHub Actions
+Pkg.activate(".")
+Pkg.develop(path = joinpath(@__DIR__, ".."), version = nothing)
 
 using Documenter
 using SynthPred
+
 
 makedocs(
     sitename = "SynthPred.jl",
