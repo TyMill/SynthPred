@@ -18,11 +18,12 @@ jobs:
         with:
           version: '1.9'
 
-      - name: Develop SynthPred locally
-        run: julia --project=docs -e 'using Pkg; Pkg.develop(path=".")'
-
-      - name: Install dependencies
-        run: julia --project=docs -e 'using Pkg; Pkg.instantiate()'
+      - name: Install documentation dependencies
+        run: julia --project=docs -e '
+          using Pkg;
+          Pkg.activate("docs");
+          Pkg.instantiate()
+        '
 
       - name: Build documentation
         run: julia --project=docs docs/make.jl
