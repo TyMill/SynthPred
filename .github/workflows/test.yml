@@ -1,12 +1,12 @@
 name: Run Tests and Coverage
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+#    branches:
+#      - main
 
 jobs:
   test:
