@@ -9,7 +9,7 @@ makedocs(
         "API Reference" => "api.md"
     ],
     authors = ["Tymoteusz Miller"],
-    repo = "https://github.com/your-username/SynthPred.jl",
+    repo = "https://github.com/TyMill/SynthPred.jl",
     modules = [SynthPred],
     clean = true
 )
