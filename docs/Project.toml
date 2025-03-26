@@ -1,0 +1,7 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+SynthPred = "c3a1c95f-8891-4b4c-952a-6b9f6c1ef1d5"
+
+[compat]
+julia = "1.9"
+Documenter = "1"
