@@ -1,0 +1,22 @@
+name = "SynthPred"
+uuid = "c3a1c95f-8891-4b4c-952a-6b9f6c1ef1d5"
+authors = ["Tymoteusz Miller <tymoteusz@example.com>"]
+version = "0.1.0"
+description = "A Julia package for synthetic data generation, imputation, AutoML, and ensemble modeling."
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+MLJ = "add582a8-493b-5b36-bb46-fbdc3fbd6d76"
+MLJEnsembles = "50ed68f4-41fd-4504-931a-1858f185dd4f"
+MLJTuning = "c6f25543-311c-4c7c-a0cc-3641e1b1297a"
+ARIMA = "e6c616b1-21b8-4b91-b5e1-5b7b6776ac63"
+Impute = "ea4d41e2-110c-477c-86f8-0e2f1876491f"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+JSON = "0f8b85d5-02eb-5a09-a6f0-9941e9de5fc0"
+
+[compat]
+julia = "1.9"
