@@ -29,3 +29,17 @@ test = ["Test"]
 
 [compat]
 julia = "1.9"
+ARIMA = "0.3"
+CSV = "0.10"
+DataFrames = "1"
+Distributions = "0.25"
+Flux = "0.13"
+HypothesisTests = "0.11"
+Impute = "0.7"
+JSON = "0.21"
+MLJ = "0.19"
+MLJEnsembles = "0.4"
+MLJTuning = "0.8"
+Missings = "1"
+PrettyTables = "2"
+StatsBase = "0.34"
