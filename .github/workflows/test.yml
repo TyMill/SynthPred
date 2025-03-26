@@ -21,11 +21,18 @@ jobs:
         with:
           version: '1.9'
 
-      - name: Install dependencies
-        run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
+      - name: Install dependencies with local SynthPred
+        run: julia --project=. -e '
+          using Pkg;
+          Pkg.develop(path=".");
+          Pkg.instantiate()
+        '
 
-      - name: Run tests
-        run: julia --project=. -e 'using Pkg; Pkg.test(coverage=true)'
+      - name: Run tests with coverage
+        run: julia --project=. -e '
+          using Pkg;
+          Pkg.test(coverage=true)
+        '
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
