@@ -29,7 +29,7 @@
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/your-username/SynthPred.jl")
+Pkg.add(url="https://github.com/TyMill/SynthPred.jl")
 ```
 
 ---
