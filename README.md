@@ -1,6 +1,7 @@
 # SynthPred.jl
 [![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://tymill.github.io/SynthPred/)
 
+[![DOI](https://zenodo.org/badge/955290469.svg)](https://doi.org/10.5281/zenodo.15090892)
 
 
 **SynthPred.jl** is a Julia package for synthetic data analysis, advanced imputation (ARIMA, RNN), AutoML, and ensemble modeling.
