@@ -1,18 +1,17 @@
 using Pkg
-
-# Przeciwdziała konfliktom wersji pakietów lokalnych w GitHub Actions
-Pkg.activate(".")
-Pkg.develop(path = joinpath(@__DIR__, ".."), version = nothing)
+Pkg.activate("docs")
+Pkg.instantiate()
 
 using Documenter
 using SynthPred
-
 
 makedocs(
     sitename = "SynthPred.jl",
     modules = [SynthPred],
     format = Documenter.HTML(),
-    pages = ["Home" => "index.md"]
+    pages = [
+        "Home" => "index.md"
+    ]
 )
 
 deploydocs(
