@@ -1,0 +1,27 @@
+name: CompatHelper
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # codziennie o północy UTC
+  workflow_dispatch:
+
+jobs:
+  CompatHelper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: '1.9'
+
+      - name: Install CompatHelper
+        run: |
+          using Pkg
+          Pkg.Registry.update()
+          Pkg.add("CompatHelper")
+          using CompatHelper
+          CompatHelper.main()
+        shell: julia --color=yes --project=.
