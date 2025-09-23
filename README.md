@@ -68,7 +68,9 @@ println(preds)
 
 ## 📚 Documentation
 
-Full documentation is available at: [https://your-username.github.io/SynthPred.jl](https://tymill.github.io/SynthPred.jl)
+- 📘 Module walkthroughs: [Exploration](https://tymill.github.io/SynthPred.jl/exploration/), [Imputer](https://tymill.github.io/SynthPred.jl/imputer/), [AutoML](https://tymill.github.io/SynthPred.jl/automl/)
+- 📖 Full API: [https://tymill.github.io/SynthPred.jl/api/](https://tymill.github.io/SynthPred.jl/api/)
+- 🌐 Documentation hub: [https://tymill.github.io/SynthPred.jl](https://tymill.github.io/SynthPred.jl)
 
 ---
 

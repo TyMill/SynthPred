@@ -12,7 +12,11 @@ makedocs(
     modules = [SynthPred],
     format = Documenter.HTML(),
     pages = [
-        "Home" => "index.md"
+        "Home" => "index.md",
+        "Exploration" => "exploration.md",
+        "Imputer" => "imputer.md",
+        "AutoML" => "automl.md",
+        "API Reference" => "api.md"
     ]
 )
 
