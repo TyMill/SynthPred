@@ -18,6 +18,14 @@ end
     @test all(!ismissing, df_imp.x)
 end
 
+@testset "Imputer module - distribution handles constant column" begin
+    df = DataFrame(x=[1.0, 1.0, 1.0, missing])
+    df_imp, report = impute_advanced(df, "distribution")
+    @test all(!ismissing, df_imp.x)
+    @test size(report, 1) == 1
+    @test report.Method[1] == "distribution"
+end
+
 @testset "Imputer module - advanced preserves row order" begin
     dates = collect(Date(2024, 1, 1):Day(1):Date(2024, 1, 12))
     values = Union{Missing, Float64}[1.0, 2.0, missing, 4.0, 5.0, 6.0, missing, 8.0, 9.0, 10.0, 11.0, 12.0]
