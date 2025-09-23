@@ -17,7 +17,7 @@ JSON = "0f8b85d5-02eb-5a09-a6f0-9941e9de5fc0"
 MLJ = "add582a8-493b-5b36-bb46-fbdc3fbd6d76"
 MLJEnsembles = "50ed68f4-41fd-4504-931a-1858f185dd4f"
 MLJTuning = "c6f25543-311c-4c7c-a0cc-3641e1b1297a"
-Missings = "33e6dc65-3a2f-5c5c-8a0f-11634f4c4b44"
+Missings = "e1d29d7a-bbdc-5cf2-9ac0-f12de2c33e28"
 PrettyTables = "08abe8d2-0a4f-5c5c-979d-0c8f5f6a1c8b"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
