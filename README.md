@@ -49,6 +49,7 @@ SynthPred.Exploration.describe_data(df)
 
 # Impute missing values (e.g. RNN strategy)
 df_clean, report = SynthPred.Imputer.impute_advanced(df, "rnn", threshold=0.1)
+mkpath("reports")  # ensure directory exists before saving
 SynthPred.Imputer.save_imputation_report(report, "reports/imputation_report.json")
 
 # Run AutoML pipeline

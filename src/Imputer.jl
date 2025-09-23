@@ -199,6 +199,11 @@ end
 # Save report
 # ----------------------------
 function save_imputation_report(report::DataFrame, filename::String)
+    dir = dirname(filename)
+    if !isempty(dir)
+        mkpath(dir)
+    end
+
     if endswith(filename, ".csv")
         CSV.write(filename, report)
     elseif endswith(filename, ".json")

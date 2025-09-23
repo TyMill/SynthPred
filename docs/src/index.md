@@ -31,6 +31,7 @@ SynthPred.Exploration.describe_data(df)
 df_clean, report = SynthPred.Imputer.impute_advanced(df, "rnn", threshold=0.1)
 
 # 4. Save imputation report
+mkpath("reports")  # ensure directory exists before saving
 SynthPred.Imputer.save_imputation_report(report, "reports/imputation_report.json")
 
 # 5. Run AutoML to find top 2 models

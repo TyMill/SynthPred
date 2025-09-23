@@ -39,6 +39,20 @@ end
     @test imputed_shuffled.value == imputed_sorted.value[perm]
 end
 
+@testset "Imputer module - save report builds directories" begin
+    report = DataFrame(Column=["x"], Method=["mean"], ImputedCount=[1])
+    temp_dir = mktempdir()
+    report_path = joinpath(temp_dir, "nested", "reports", "imputation_report.csv")
+
+    save_imputation_report(report, report_path)
+
+    @test isfile(report_path)
+    loaded = CSV.read(report_path, DataFrame)
+    @test loaded.Column == report.Column
+    @test loaded.Method == report.Method
+    @test loaded.ImputedCount == report.ImputedCount
+end
+
 @testset "AutoML module - top model selection" begin
     df = DataFrame(
         feature1 = rand(10),
