@@ -11,8 +11,8 @@ export run_automl, blend_top_models, predict_ensemble
 """
     run_automl(df::DataFrame, target_col::Symbol; max_models=5)
 
-Trains multiple classifiers and selects top 2 based on accuracy.
-Returns top 2 models and their scores.
+Trains multiple classifiers and selects up to the top 2 based on accuracy.
+Returns the available models and their scores.
 """
 function run_automl(df::DataFrame, target_col::Symbol; max_models=5)
     y = df[!, target_col]
@@ -31,16 +31,31 @@ function run_automl(df::DataFrame, target_col::Symbol; max_models=5)
 
     results = []
     for model in models[1:min(max_models, length(models))]
-        mach = machine(model, X, y)
-        eval = evaluate!(mach, resampling=CV(nfolds=5), measure=accuracy, verbosity=0)
-        push!(results, (model, mean(eval.measurement)))
+        try
+            mach = machine(model, X, y)
+            eval = evaluate!(mach, resampling=CV(nfolds=5), measure=accuracy, verbosity=0)
+            push!(results, (model, mean(eval.measurement)))
+        catch err
+            @warn "Model $(model) failed during evaluation" exception = err
+        end
+    end
+
+    if isempty(results)
+        @warn "No models were successfully evaluated."
+        return Any[], Float64[]
     end
 
     sorted_results = sort(results, by=x -> -x[2])
-    top_models = [x[1] for x in sorted_results[1:2]]
-    performances = [x[2] for x in sorted_results[1:2]]
+    k = min(2, length(sorted_results))
+    if k < 2
+        @warn "Only $(k) model(s) successfully evaluated; returning available result(s)."
+    end
 
-    println("🏆 Top 2 Models:")
+    selected = sorted_results[1:k]
+    top_models = first.(selected)
+    performances = last.(selected)
+
+    println("🏆 Top $(k) Model$(k == 1 ? "" : "s"):")
     for (i, m) in enumerate(top_models)
         println("$(i). $(m) | Accuracy: $(round(performances[i], digits=4))")
     end
@@ -51,11 +66,23 @@ end
 """
     blend_top_models(models::Vector, X::DataFrame, y)::Machine
 
-Creates a simple ensemble of the top 2 models (average of probabilities).
+Creates a simple ensemble of the top models (average of probabilities) when
+multiple are supplied, or fits a single model directly if only one is
+available.
 """
 function blend_top_models(models::Vector, X::DataFrame, y)::Machine
-    model1, model2 = models
-    ensemble = EnsembleModel(atom=[model1, model2], weights=[0.5, 0.5], strategy=:average_prob)
+    if isempty(models)
+        throw(ArgumentError("blend_top_models requires at least one model, but none were provided."))
+    elseif length(models) == 1
+        @warn "Only one model provided; returning fitted model without ensembling."
+        mach = machine(only(models), X, y)
+        fit!(mach)
+        return mach
+    end
+
+    selected_models = models[1:2]
+    weights = fill(1 / length(selected_models), length(selected_models))
+    ensemble = EnsembleModel(atom=selected_models, weights=weights, strategy=:average_prob)
     mach = machine(ensemble, X, y)
     fit!(mach)
     println("✅ Ensemble model trained.")

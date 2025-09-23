@@ -50,3 +50,20 @@ end
     @test length(top_models) == 2
     @test scores[1] >= 0 && scores[1] <= 1
 end
+
+@testset "AutoML module - handles limited models" begin
+    df = DataFrame(
+        feature1 = rand(10),
+        feature2 = rand(["red", "blue"], 10),
+        target = rand(["A", "B"], 10)
+    )
+
+    top_models, scores = run_automl(df, :target; max_models=1)
+    @test length(top_models) == 1
+    @test length(scores) == 1
+
+    X = select(df, Not(:target))
+    y = df[:, :target]
+    mach = blend_top_models(top_models, X, y)
+    @test !isnothing(mach)
+end
