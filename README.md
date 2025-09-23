@@ -19,7 +19,7 @@
   - Gaussian distribution sampling
   - Time series-based: ARIMA
   - Sequence learning-based: RNN (Flux.jl)
-- 🤖 AutoML for classification (MLJ.jl-based)
+- 🤖 AutoML for classification with lightweight Naive Bayes and KNN search
 - ⚖️ Blending top-performing models via ensembling
 - 📊 Predictions on new data
 - 📑 JSON/CSV imputation reports
@@ -102,7 +102,7 @@ SynthPred/
 
 - [x] Core modules: Exploration, Imputer, AutoML
 - [x] ARIMA and RNN-based imputations
-- [x] AutoML + model blending with MLJ.jl
+- [x] AutoML + majority-vote model blending
 - [x] Imputation reports (CSV/JSON)
 - [x] Documentation (Documenter.jl + GitHub Pages)
 - [ ] Exporting trained models (`JLD2`, `BSON`)
