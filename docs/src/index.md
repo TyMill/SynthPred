@@ -48,3 +48,13 @@ predictions = SynthPred.AutoML.predict_ensemble(ensemble_model, Xnew)
 
 println(predictions)
 ```
+
+## 📚 Documentation roadmap
+
+- Dive into the [Exploration module guide](@ref exploration-guide) for
+  profiling workflows and data diagnostics.
+- Learn how to handle missing values in the [Imputer module guide](@ref
+  imputer-guide).
+- Automate model selection and blending with the [AutoML module guide](@ref
+  automl-guide).
+- Browse every exported symbol in the [API Reference](@ref api-reference).
