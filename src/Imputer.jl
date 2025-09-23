@@ -2,8 +2,8 @@ module Imputer
 
 using DataFrames, Statistics, StatsBase, Distributions
 using Impute, Dates, JSON, CSV
-using ARIMA
 using Flux
+using StateSpaceModels
 
 export impute_simple, impute_advanced, save_imputation_report
 
@@ -58,24 +58,36 @@ function arima_impute(df::DataFrame, col::Symbol, time_col::Symbol)::Vector
     perm = sortperm(df[!, time_col])
     df_sorted = df[perm, :]
     y_sorted = df_sorted[!, col]
-    ts_vals = collect(skipmissing(y_sorted))
+    observed = collect(skipmissing(y_sorted))
     result = Vector{eltype(df[!, col])}(undef, nrow(df))
 
-    if length(ts_vals) < 10
+    if length(observed) < 10
         println("⚠️ Too few values for ARIMA.")
         result[perm] = y_sorted
         return result
     end
 
-    model = fit(ARIMA, ts_vals, 1, 0, 0)
+    history = Float64.(observed)
     y_filled = copy(y_sorted)
 
     for i in eachindex(y_sorted)
         if ismissing(y_sorted[i])
-            forecast = predict(model, 1)
-            y_filled[i] = forecast[1]
-            push!(ts_vals, forecast[1])
-            model = fit(ARIMA, ts_vals, 1, 0, 0)
+            model = SARIMA(history, order=(1, 0, 0), seasonal=(0, 0, 0, 0))
+            results = fit(model)
+            prediction = forecast(results, 1)
+
+            value = if prediction isa AbstractVector
+                prediction[1]
+            elseif hasproperty(prediction, :predicted_mean)
+                getproperty(prediction, :predicted_mean)[1]
+            elseif hasproperty(prediction, :forecast)
+                getproperty(prediction, :forecast)[1]
+            else
+                error("Unsupported forecast result from StateSpaceModels")
+            end
+
+            y_filled[i] = convert(eltype(y_filled), value)
+            push!(history, Float64(value))
         end
     end
 

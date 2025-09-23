@@ -45,7 +45,10 @@ end
     imputed_sorted, _ = impute_advanced(df_sorted, "arima")
     imputed_shuffled, _ = impute_advanced(df_shuffled, "arima")
 
+    @test all(!ismissing, imputed_sorted.value)
+    @test all(!ismissing, imputed_shuffled.value)
     @test imputed_shuffled.value == imputed_sorted.value[perm]
+    @test all(isfinite, imputed_sorted.value)
 end
 
 @testset "Imputer module - save report builds directories" begin
