@@ -2,10 +2,7 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - master
-      - release-*
+    branches: [ main, master, release-* ]
   pull_request:
 
 concurrency:
@@ -14,20 +11,14 @@ concurrency:
 
 jobs:
   test:
-    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }}
+    name: Julia ${{ matrix.version }} • ${{ matrix.os }} • ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        version:
-          - '1'
-          - nightly
-        os:
-          - ubuntu-latest
-          - macOS-latest
-          - windows-latest
-        arch:
-          - x64
+        version: [ '1.10', 'nightly' ]
+        os: [ ubuntu-latest, macOS-latest, windows-latest ]
+        arch: [ x64 ]
     steps:
       - uses: actions/checkout@v4
 
@@ -36,18 +27,24 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
 
-      - uses: actions/cache@v3
+
+      - uses: julia-actions/cache@v1
         with:
-          path: ~/.julia/artifacts
-          key: ${{ runner.os }}-test-${{ hashFiles('**/Project.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-test-
+          cache-registries: true  # cachuje też rejestry (General)
+          cache-packages: true    # cachuje artefakty i pakiety
 
+      # Budowa/instalacja projektu (Pkg.build + instantiate + precompile)
       - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-runtest@v1
 
+      # Testy (Pkg.test()) w kontekście repo (czyli --project=.)
+      - uses: julia-actions/julia-runtest@v1
+        continue-on-error: ${{ matrix.version == 'nightly' }}
+
+      # Coverage -> lcov.info
       - uses: julia-actions/julia-processcoverage@v1
 
+      # Upload do Codecov
       - uses: codecov/codecov-action@v3
         with:
-          file: lcov.info
+          files: lcov.info
+          fail_ci_if_error: false
