@@ -1,6 +1,6 @@
 name = "SynthPred"
 uuid = "c3a1c95f-8891-4b4c-952a-6b9f6c1ef1d5"
-authors = ["Tymoteusz Miller <me@tymoteuszmiller.dev>"]
+authors = ["Tymoteusz Miller"]
 version = "0.1.0"
 description = "A Julia package for synthetic data analysis, advanced imputation (ARIMA, RNN), AutoML, and ensemble modeling."
 
