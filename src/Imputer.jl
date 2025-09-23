@@ -19,8 +19,9 @@ function impute_simple(df::DataFrame, method::String)::DataFrame
     df_clean = deepcopy(df)
 
     for col in names(df)
-        if eltype(df[!, col]) <: Union{Missing, Number}
-            col_data = df[!, col]
+        col_data = df[!, col]
+
+        if eltype(col_data) <: Union{Missing, Number}
             if method == "mean"
                 df_clean[!, col] = Impute.impute(col_data, Impute.mean)
             elseif method == "median"
@@ -28,6 +29,8 @@ function impute_simple(df::DataFrame, method::String)::DataFrame
             elseif method == "mode"
                 df_clean[!, col] = Impute.impute(col_data, Impute.mode)
             end
+        elseif method == "mode" && eltype(col_data) <: Union{Missing, AbstractString}
+            df_clean[!, col] = Impute.impute(col_data, Impute.mode)
         elseif method in ["ffill", "bfill"]
             df_clean[!, col] = Impute.locf(df[!, col]; rev=(method == "bfill"))
         end
