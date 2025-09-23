@@ -18,6 +18,15 @@ end
     @test all(!ismissing, df_imp.x)
 end
 
+@testset "Imputer module - simple mode handles strings" begin
+    df = DataFrame(category=Union{Missing, String}["apple", "banana", missing, "apple", missing])
+    expected = coalesce.(df.category, "apple")
+    df_imp = impute_simple(df, "mode")
+
+    @test all(!ismissing, df_imp.category)
+    @test df_imp.category == expected
+end
+
 @testset "Imputer module - distribution handles constant column" begin
     df = DataFrame(x=[1.0, 1.0, 1.0, missing])
     df_imp, report = impute_advanced(df, "distribution")
