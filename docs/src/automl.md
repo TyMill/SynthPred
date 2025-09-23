@@ -1,27 +1,29 @@
 # [AutoML Module](@id automl-guide)
 
 `SynthPred.AutoML` orchestrates model training, evaluation, and ensembling
-on top of MLJ. It aims to provide a quick baseline as well as a path to
-stronger ensemble predictors.
+using built-in implementations of Gaussian Naive Bayes and k-nearest
+neighbour classifiers. It aims to provide a quick baseline as well as a path
+to stronger ensemble predictors.
 
 ## Core capabilities
 
 - [`AutoML.run_automl`](@ref) evaluates a configurable list of classifiers
   using cross-validation and returns the top performers.
-- [`AutoML.blend_top_models`](@ref) builds a probability-averaging ensemble
-  when at least two trained models are available, or fits the single model
-  directly otherwise.
-- [`AutoML.predict_ensemble`](@ref) makes predictions on new data frames,
-  returning labels when possible or probabilities as a fallback.
+- [`AutoML.blend_top_models`](@ref) builds a majority-vote ensemble when at
+  least two trained models are available, or fits the single model directly
+  otherwise.
+- [`AutoML.predict_ensemble`](@ref) makes predictions on new data frames using
+  the fitted ensemble.
 
 ## Recommended workflow
 
 1. Prepare clean, imputed data (`DataFrame`) and identify the target column.
 2. Call `run_automl` to rank candidate learners. You can limit the search
-   with the `max_models` keyword if MLJ dependencies are heavy.
+   with the `max_models` keyword if you only want to evaluate a subset of
+   models.
 3. Pass the selected models, along with the features and target, to
-   `blend_top_models` to fit an ensemble machine.
-4. Use the returned machine with `predict_ensemble` for inference on
+   `blend_top_models` to fit an ensemble container.
+4. Use the returned ensemble with `predict_ensemble` for inference on
    hold-out or production datasets.
 
 ## Usage example
@@ -61,4 +63,4 @@ preds = AutoML.predict_ensemble(mach, select(test_df, Not(:target)))
 - Pair this with the [Imputer guide](@ref imputer-guide) to ensure the
   dataset passed into `AutoML` has reliable, gap-free inputs.
 - Dive into the [API Reference](@ref api-reference) for argument details
-  and notes on underlying MLJ models.
+  and notes on the lightweight classifiers powering the search.

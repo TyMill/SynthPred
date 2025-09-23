@@ -91,5 +91,8 @@ end
     X = select(df, Not(:target))
     y = df[:, :target]
     mach = blend_top_models(top_models, X, y)
-    @test !isnothing(mach)
+    @test mach isa AutoML.EnsembleModel
+
+    preds = predict_ensemble(mach, X)
+    @test length(preds) == nrow(X)
 end
