@@ -148,12 +148,23 @@ function impute_advanced(df::DataFrame, method::String; threshold=0.1)
 
         if frac_missing >= threshold && eltype(col_data) <: Union{Missing, Number}
             imputed_count = 0
+            performed_imputation = false
 
             if method == "distribution"
-                vals = skipmissing(col_data)
-                dist = Normal(mean(vals), std(vals))
-                df_clean[!, col] = coalesce.(col_data, rand(dist, nrows))
-                imputed_count = n_missing
+                vals = collect(skipmissing(col_data))
+
+                if !isempty(vals)
+                    μ = mean(vals)
+                    σ = std(vals)
+                    if !isfinite(σ) || σ == 0
+                        σ = eps(typeof(σ))
+                    end
+
+                    dist = Normal(μ, σ)
+                    df_clean[!, col] = coalesce.(col_data, rand(dist, nrows))
+                    imputed_count = n_missing
+                    performed_imputation = true
+                end
 
             elseif method == "arima" && time_col !== nothing
                 println("ARIMA imputing $col...")
@@ -161,6 +172,7 @@ function impute_advanced(df::DataFrame, method::String; threshold=0.1)
                 df_clean[!, col] = arima_impute(df, Symbol(col), Symbol(time_col))
                 after = count(ismissing, df_clean[!, col])
                 imputed_count = before - after
+                performed_imputation = true
 
             elseif method == "rnn" && time_col !== nothing
                 println("RNN imputing $col...")
@@ -168,9 +180,12 @@ function impute_advanced(df::DataFrame, method::String; threshold=0.1)
                 df_clean[!, col] = rnn_impute(df, Symbol(col), Symbol(time_col))
                 after = count(ismissing, df_clean[!, col])
                 imputed_count = before - after
+                performed_imputation = true
             end
 
-            push!(report, (col, method, imputed_count))
+            if performed_imputation
+                push!(report, (col, method, imputed_count))
+            end
         end
     end
 
