@@ -1,5 +1,6 @@
 using Test
 using CSV, DataFrames
+using Dates
 using SynthPred.Exploration
 using SynthPred.Imputer
 using SynthPred.AutoML
@@ -15,6 +16,19 @@ end
     df = DataFrame(x=[1.0, 2.0, missing, 4.0])
     df_imp = impute_simple(df, "mean")
     @test all(!ismissing, df_imp.x)
+end
+
+@testset "Imputer module - advanced preserves row order" begin
+    dates = collect(Date(2024, 1, 1):Day(1):Date(2024, 1, 12))
+    values = Union{Missing, Float64}[1.0, 2.0, missing, 4.0, 5.0, 6.0, missing, 8.0, 9.0, 10.0, 11.0, 12.0]
+    df_sorted = DataFrame(time=dates, value=values)
+    perm = reverse(1:length(dates))
+    df_shuffled = df_sorted[perm, :]
+
+    imputed_sorted, _ = impute_advanced(df_sorted, "arima")
+    imputed_shuffled, _ = impute_advanced(df_shuffled, "arima")
+
+    @test imputed_shuffled.value == imputed_sorted.value[perm]
 end
 
 @testset "AutoML module - top model selection" begin
