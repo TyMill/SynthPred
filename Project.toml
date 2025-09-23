@@ -19,7 +19,7 @@ StateSpaceModels = "510215fc-4207-5dde-b226-833fc4488ee2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [extras]
-Test = "7269a6da-0437-5bbc-9361-9495eed66fee"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test"]
