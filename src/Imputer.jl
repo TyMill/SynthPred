@@ -52,40 +52,48 @@ end
 # ARIMA Imputation
 # ----------------------------
 function arima_impute(df::DataFrame, col::Symbol, time_col::Symbol)::Vector
-    df_sorted = sort(df, time_col)
-    y = df_sorted[!, col]
-    ts_vals = collect(skipmissing(y))
+    perm = sortperm(df[!, time_col])
+    df_sorted = df[perm, :]
+    y_sorted = df_sorted[!, col]
+    ts_vals = collect(skipmissing(y_sorted))
+    result = Vector{eltype(df[!, col])}(undef, nrow(df))
 
     if length(ts_vals) < 10
         println("⚠️ Too few values for ARIMA.")
-        return y
+        result[perm] = y_sorted
+        return result
     end
 
     model = fit(ARIMA, ts_vals, 1, 0, 0)
-    y_filled = copy(y)
+    y_filled = copy(y_sorted)
 
-    for i in eachindex(y)
-        if ismissing(y[i])
+    for i in eachindex(y_sorted)
+        if ismissing(y_sorted[i])
             forecast = predict(model, 1)
             y_filled[i] = forecast[1]
             push!(ts_vals, forecast[1])
             model = fit(ARIMA, ts_vals, 1, 0, 0)
         end
     end
-    return y_filled
+
+    result[perm] = y_filled
+    return result
 end
 
 # ----------------------------
 # RNN Imputation
 # ----------------------------
 function rnn_impute(df::DataFrame, col::Symbol, time_col::Symbol; window=5, epochs=50)
-    df_sorted = sort(df, time_col)
-    y = df_sorted[!, col]
-    values = skipmissing(y) |> collect |> Float32.
+    perm = sortperm(df[!, time_col])
+    df_sorted = df[perm, :]
+    y_sorted = df_sorted[!, col]
+    values = skipmissing(y_sorted) |> collect |> Float32.
+    result = Vector{eltype(df[!, col])}(undef, nrow(df))
 
     if length(values) < window + 5
         println("⚠️ Too few values for RNN.")
-        return y
+        result[perm] = y_sorted
+        return result
     end
 
     X = [values[i:i+window-1] for i in 1:(length(values) - window)]
@@ -103,11 +111,11 @@ function rnn_impute(df::DataFrame, col::Symbol, time_col::Symbol; window=5, epoc
         Flux.train!(loss, ps, [(x_data, y_data)], opt)
     end
 
-    y_filled = copy(y)
+    y_filled = copy(y_sorted)
     input_seq = values[end-window+1:end]
 
-    for i in eachindex(y)
-        if ismissing(y[i])
+    for i in eachindex(y_sorted)
+        if ismissing(y_sorted[i])
             x = reshape(Float32.(input_seq), window, 1, 1)
             prediction = model(x)[1]
             y_filled[i] = prediction
@@ -115,7 +123,9 @@ function rnn_impute(df::DataFrame, col::Symbol, time_col::Symbol; window=5, epoc
             popfirst!(input_seq)
         end
     end
-    return y_filled
+
+    result[perm] = y_filled
+    return result
 end
 
 # ----------------------------
