@@ -47,3 +47,4 @@ Xnew = CSV.read("data/new_data.csv", DataFrame)
 predictions = SynthPred.AutoML.predict_ensemble(ensemble_model, Xnew)
 
 println(predictions)
+```
